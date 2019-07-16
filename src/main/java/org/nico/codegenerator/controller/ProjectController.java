@@ -26,7 +26,7 @@ import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/project")
+@RequestMapping("/projects")
 public class ProjectController {
 
 	@Autowired
@@ -61,7 +61,7 @@ public class ProjectController {
 	    return projectService.listOfPage(page, size);
 	}
 	
-	@ApiOperation(value = "更新项目")
+	@ApiOperation(value = "删除项目")
 	@DeleteMapping("/{id}")
 	public RespVo<?> del(@PathVariable Long id){
 	    return projectService.delete(id);
