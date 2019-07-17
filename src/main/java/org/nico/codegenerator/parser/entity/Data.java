@@ -1,13 +1,24 @@
 package org.nico.codegenerator.parser.entity;
 
 import java.util.List;
+import java.util.Map;
 
 public class Data {
 	
 	private List<Field> fields;
 	
+	private Map<String, Object> properties;
+	
 	private String name;
 	
+	public Map<String, Object> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(Map<String, Object> properties) {
+		this.properties = properties;
+	}
+
 	public List<Field> getFields() {
 		return fields;
 	}
@@ -31,14 +42,25 @@ public class Data {
 		private Type type;
 		
 		private boolean required;
+		
+		private boolean primarily;
 
 		public Field() {
 		}
 
-		public Field(String name, Type type, boolean required) {
+		public Field(String name, Type type, boolean required, boolean primarily) {
 			this.name = name;
 			this.type = type;
 			this.required = required;
+			this.primarily = primarily;
+		}
+
+		public boolean isPrimarily() {
+			return primarily;
+		}
+
+		public void setPrimarily(boolean primarily) {
+			this.primarily = primarily;
 		}
 
 		public boolean isRequired() {

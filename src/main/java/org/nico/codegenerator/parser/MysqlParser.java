@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.nico.codegenerator.parser.entity.Data;
 import org.nico.codegenerator.parser.entity.Type;
 import org.nico.codegenerator.parser.entity.Data.Field;
+import org.nico.codegenerator.utils.NameUtils;
 import org.springframework.util.CollectionUtils;
 
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
+import net.sf.jsqlparser.statement.create.table.Index;
 
 public class MysqlParser extends AbstractParser{
 
@@ -74,7 +78,14 @@ public class MysqlParser extends AbstractParser{
 			CreateTable c = (CreateTable) CCJSqlParserUtil.parse(ddl);
 			
 			Data data = new Data();
-			data.setName(all2Slide(c.getTable().getName()));
+			data.setName(NameUtils.all2Slide(c.getTable().getName()));
+			
+			List<String> primaryKeyList = new ArrayList<>();
+			c.getIndexes().stream().filter(e -> e.getType().equalsIgnoreCase("PRIMARY KEY")).forEach(e -> {
+				e.getColumnsNames().forEach(key -> {
+					primaryKeyList.add(NameUtils.all2Slide(key));
+				});
+			});
 			
 			List<Field> fields = new ArrayList<>(c.getColumnDefinitions().size());
 			StringBuilder specBuilder = new StringBuilder();
@@ -82,8 +93,11 @@ public class MysqlParser extends AbstractParser{
 				if(! CollectionUtils.isEmpty(col.getColumnSpecStrings())) {
 					col.getColumnSpecStrings().forEach(s -> specBuilder.append(s.toUpperCase() + " "));
 				}
+				String name = NameUtils.all2Slide(col.getColumnName());
+				
 				boolean required = specBuilder.toString().contains("NOT NULL");
-				fields.add(new Field(all2Slide(col.getColumnName()), MYSQL_TYPE_MAP.get(col.getColDataType().getDataType().toLowerCase()), required));
+				boolean primarily = primaryKeyList.contains(name);
+				fields.add(new Field(name, MYSQL_TYPE_MAP.get(col.getColDataType().getDataType().toLowerCase()), required, primarily));
 			});
 			data.setFields(fields);
 			datas.add(data);

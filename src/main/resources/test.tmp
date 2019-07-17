@@ -1,0 +1,143 @@
+<%
+var tableName = r.name;
+var names = strutil.split(tableName, "_");
+var objName = "";
+for(n in names){
+	if(nLP.dataIndex < 2){
+		continue;
+	}
+	var link = "_";
+	if(nLP.last){
+		link = "";
+	}
+	objName += n + link;
+}
+
+var grahqlObject = printCapitalize(printHump(objName));
+var talbeObject = printCapitalize(printHump(r.name));
+%>
+package ${r.properties.package}
+
+import (
+	"context"
+	"github.com/polaris-team/polaris-backend/polaris-common/core/logger"
+	"github.com/polaris-team/polaris-backend/polaris-common/core/utils/copyer"
+	"github.com/polaris-team/polaris-backend/polaris-common/core/utils/json"
+	"github.com/polaris-team/polaris-backend/polaris-common/library/db/mysql"
+	"github.com/polaris-team/polaris-backend/polaris-idgen/service"
+	"github.com/polaris-team/polaris-backend/polaris-task/graphql/models"
+	"upper.io/db.v3"
+)
+
+var log = logger.GetDefaultLogger()
+
+func (r *queryResolver) ${grahqlObject}s(ctx context.Context) ([]*models.${grahqlObject}, error) {
+	conn, err := mysql.GetConnect()
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Info(err)
+		}
+	}()
+	if err != nil{
+		return nil, err
+	}
+	entity := &models.${talbeObject}{}
+	entities := &[]*models.${talbeObject}{}
+	err = conn.Collection(entity.TableName()).Find(db.Cond{
+		"is_delete": 0,
+	}).All(entities)
+	entitiesJson,_ := json.ToJson(entities)
+	log.Infof("Get list of %s : %s", entity.TableName(), entitiesJson)
+	if err != nil{
+		return nil, err
+	}
+	resultList := &[]*models.Project{}
+	copyer.Copy(entities, resultList)
+	log.Infof("Copy list of %s : %s", entity.TableName(), entitiesJson)
+	return *resultList, nil
+}
+
+func (r *mutationResolver) Create${grahqlObject}(ctx context.Context, input models.Create${grahqlObject}Req) (*models.${grahqlObject}, error) {
+	entity := &models.${talbeObject}{}
+	copyer.Copy(input, entity)
+
+	id, err := service.ApplyId(input.OrgID, input.Code, input.PreCode)
+	if err != nil{
+		return nil, err
+	}
+	entity.Id = id
+
+	conn, err := mysql.GetConnect()
+	if err != nil{
+		return nil, err
+	}
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Info(err)
+		}
+	}()
+
+	_, err = conn.Collection(entity.TableName()).Insert(entity)
+	if err != nil{
+		return nil, err
+	}
+
+	result := &models.${grahqlObject}{}
+	err = copyer.Copy(entity, result)
+	if err != nil{
+		return nil, err
+	}
+	return result, nil
+}
+
+func (r *mutationResolver) Update${grahqlObject}(ctx context.Context, input models.Update${grahqlObject}Req) (*models.${grahqlObject}, error) {
+	entity := &models.${talbeObject}{}
+	copyer.Copy(input, entity)
+
+	conn, err := mysql.GetConnect()
+	if err != nil{
+		return nil, err
+	}
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Info(err)
+		}
+	}()
+
+	err = conn.Collection(entity.TableName()).UpdateReturning(entity)
+	if err != nil{
+		return nil, err
+	}
+
+	result := &models.${grahqlObject}{}
+	err = copyer.Copy(entity, result)
+	if err != nil{
+		return nil, err
+	}
+	return result, nil
+}
+
+func (r *mutationResolver) Delete${grahqlObject}(ctx context.Context, input models.Delete${grahqlObject}Req) (*models.${grahqlObject}, error) {
+	conn, err := mysql.GetConnect()
+	if err != nil{
+		return nil, err
+	}
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Info(err)
+		}
+	}()
+	entity := &models.${talbeObject}{}
+	entity.Id = input.ID
+	entity.IsDelete = 1
+	err = conn.Collection(entity.TableName()).UpdateReturning(entity)
+	if err != nil{
+		return nil, err
+	}
+	result := &models.${grahqlObject}{}
+	err = copyer.Copy(entity, result)
+	if err != nil{
+		return nil, err
+	}
+	return result, nil
+}
