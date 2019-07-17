@@ -179,11 +179,6 @@
 		    <version>3.0.10.RELEASE</version>
 		</dependency>
 		
-		<dependency>
-			<groupId>com.github.jsqlparser</groupId>
-			<artifactId>jsqlparser</artifactId>
-			<version>2.1</version>
-		</dependency>
 	</dependencies>
 
 	<build>
