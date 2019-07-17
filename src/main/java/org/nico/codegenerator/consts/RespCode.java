@@ -20,6 +20,9 @@ public enum RespCode {
     FRAME_HANDLER_NOT_FOUND(513, "没有找到对应的帧处理器"),
     ANIMATION_NOT_FOUND(514, "对应的字符动画不存在"),
     UNAUTHORIZED_OPERATION(515, "操作越权"),
+    PROJECT_NOT_EXIST(516, "项目不存在"),
+    TEMPLATE_NOT_EXIST(517, "模板不存在"),
+    TEMPLATE_PROJECT_NOT_EXIST(518, "模板所属项目不存在"),
     
     PARAMS_OVERFLOW_LIMIT(901, "%s超出限制%s-%s"),
     PARAMS_ERROR(902, "%s参数错误"),

@@ -1,7 +1,5 @@
 package org.nico.codegenerator.model.vo;
 
-import java.util.Date;
-
 public class CreateProjectRespVo {
 
     private Long id;

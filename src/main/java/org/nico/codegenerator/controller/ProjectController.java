@@ -6,10 +6,12 @@ import org.nico.codegenerator.consts.RespCode;
 import org.nico.codegenerator.model.vo.CreateProjectReqVo;
 import org.nico.codegenerator.model.vo.CreateProjectRespVo;
 import org.nico.codegenerator.model.vo.GetProjectRespVo;
+import org.nico.codegenerator.model.vo.GetTemplateRespVo;
 import org.nico.codegenerator.model.vo.ListVo;
 import org.nico.codegenerator.model.vo.RespVo;
 import org.nico.codegenerator.model.vo.UpdateProjectReqVo;
 import org.nico.codegenerator.service.ProjectService;
+import org.nico.codegenerator.service.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,9 @@ public class ProjectController {
 	@Autowired
 	private ProjectService projectService;
 	
+	@Autowired
+	private TemplateService templateService;
+	
 	@ApiOperation(value = "创建项目")
 	@PostMapping
 	public RespVo<CreateProjectRespVo> post(@RequestBody CreateProjectReqVo projectReqVo){
@@ -48,17 +53,6 @@ public class ProjectController {
             return RespVo.failure(RespCode.PARAMS_ERROR_WITH_REASON, "properties", "Json格式非法");
         }
 	    return projectService.create(projectReqVo);
-	}
-	
-	@ApiOperation(value = "获取项目")
-	@GetMapping
-	public RespVo<ListVo<GetProjectRespVo>> get( 
-			@RequestParam int page, 
-            @RequestParam int size){
-		if(size > BaseConfig.pageMaxLength) {
-            return RespVo.failure(RespCode.PARAMS_OVERFLOW_LIMIT, "size", "0", BaseConfig.pageMaxLength);
-        }
-	    return projectService.listOfPage(page, size);
 	}
 	
 	@ApiOperation(value = "删除项目")
@@ -86,5 +80,17 @@ public class ProjectController {
             return RespVo.failure(RespCode.PARAMS_ERROR_WITH_REASON, "properties", "Json格式非法");
         }
 	    return projectService.update(id, projectReqVo);
+	}
+	
+	@ApiOperation(value = "获取模板")
+	@GetMapping("/{projectId}/templates")
+	public RespVo<ListVo<GetTemplateRespVo>> get(
+			@PathVariable Long projectId,
+			@RequestParam int page, 
+            @RequestParam int size){
+		if(size > BaseConfig.pageMaxLength) {
+            return RespVo.failure(RespCode.PARAMS_OVERFLOW_LIMIT, "size", "0", BaseConfig.pageMaxLength);
+        }
+	    return templateService.listOfPage(projectId, page, size);
 	}
 }

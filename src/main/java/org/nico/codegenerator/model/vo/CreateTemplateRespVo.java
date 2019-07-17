@@ -1,14 +1,7 @@
-package org.nico.codegenerator.model.po;
+package org.nico.codegenerator.model.vo;
 
-import java.util.Date;
+public class CreateTemplateRespVo {
 
-import org.nico.ourbatis.annotation.RenderName;
-import org.nico.ourbatis.annotation.RenderPrimary;
-
-@RenderName("template")
-public class Template {
-
-	@RenderPrimary
     private Long id;
     
     private String name;
@@ -21,20 +14,6 @@ public class Template {
     
     private String content;
     
-    private Integer deleted;
-    
-    private Date createTime;
-    
-    private Date updateTime;
-
-	public Integer getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(Integer deleted) {
-		this.deleted = deleted;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -83,20 +62,4 @@ public class Template {
 		this.content = content;
 	}
 
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-    
 }

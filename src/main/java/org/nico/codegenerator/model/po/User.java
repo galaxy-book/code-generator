@@ -17,11 +17,21 @@ public class User {
     
     private String nickname;
     
+    private Integer deleted;
+    
     private Date createTime;
     
     private Date updateTime;
 
-    public Long getId() {
+    public Integer getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Integer deleted) {
+		this.deleted = deleted;
+	}
+
+	public Long getId() {
         return id;
     }
 

@@ -1,4 +1,4 @@
-package org.nico.codegenerator.model.po;
+package org.nico.codegenerator.model.vo;
 
 import java.util.Date;
 
@@ -6,7 +6,7 @@ import org.nico.ourbatis.annotation.RenderName;
 import org.nico.ourbatis.annotation.RenderPrimary;
 
 @RenderName("template")
-public class Template {
+public class GetTemplateRespVo {
 
 	@RenderPrimary
     private Long id;

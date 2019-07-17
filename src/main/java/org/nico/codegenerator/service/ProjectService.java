@@ -27,8 +27,12 @@ public class ProjectService {
 	public RespVo<CreateProjectRespVo> create(CreateProjectReqVo projectReqVo){
 		Project project = ModelUtils.convert(projectReqVo, Project.class);
 		project.setUserId(HttpContextUtils.getUserId());
-		projectMapper.insertSelective(project);
-		return RespVo.success(ModelUtils.convert(project, CreateProjectRespVo.class));
+		int row = projectMapper.insertSelective(project);
+		if(row > 0) {
+			return RespVo.success(ModelUtils.convert(project, CreateProjectRespVo.class));	
+		}else {
+			return RespVo.failure(RespCode.INSERT_FAILURE);
+		}
 	}
 	
 	public RespVo<?> delete(Long id){
@@ -37,13 +41,17 @@ public class ProjectService {
 		query.setDeleted(DelFlag.NOTDEL.getCode());
 		query.setUserId(HttpContextUtils.getUserId());
 		if(projectMapper.selectCount(query) == 0) {
-			return RespVo.failure(RespCode.UNAUTHORIZED_OPERATION);
+			return RespVo.failure(RespCode.PROJECT_NOT_EXIST);
 		}
 		Project project = new Project();
 		project.setId(id);
 		project.setDeleted(DelFlag.DELED.getCode());
-		projectMapper.updateSelective(project);
-		return RespVo.success();
+		int row = projectMapper.updateSelective(project);
+		if(row > 0) {
+			return RespVo.success();	
+		}else {
+			return RespVo.failure(RespCode.UPDATE_FAILURE);
+		}
 	}
 	
 	public RespVo<?> update(Long id, UpdateProjectReqVo projectReqVo){
@@ -56,11 +64,18 @@ public class ProjectService {
 		}
 		Project project = ModelUtils.convert(projectReqVo, Project.class);
 		project.setId(id);
-		projectMapper.updateSelective(project);
-		return RespVo.success();
+		int row = projectMapper.updateSelective(project);
+		if(row > 0) {
+			return RespVo.success();	
+		}else {
+			return RespVo.failure(RespCode.UPDATE_FAILURE);
+		}
 	}
 	
-	public RespVo<ListVo<GetProjectRespVo>> listOfPage(int page, int size){
+	public RespVo<ListVo<GetProjectRespVo>> listOfPage(Long userId, int page, int size){
+		if(! userId.equals(HttpContextUtils.getUserId())) {
+			return RespVo.failure(RespCode.UNAUTHORIZED_OPERATION);
+		}
 		Page<Project> pages = PageHelper.startPage(page, size, "create_time desc");
 		Project query = new Project();
 		query.setUserId(HttpContextUtils.getUserId());

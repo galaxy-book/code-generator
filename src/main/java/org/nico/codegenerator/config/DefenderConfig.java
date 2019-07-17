@@ -26,7 +26,9 @@ public class DefenderConfig {
     public Defender defender() {
         return Defender.getInstance()
                 .registry(Guarder.builder(GuarderType.URI)
-                        .pattern("POST /project/**")
+                        .pattern("* /projects/**")
+                        .pattern("* /templates/**")
+                        .pattern("* /users/*/projects")
                         .preventer(new AbstractPreventer() {
                             
                             @Autowired
