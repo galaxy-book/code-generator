@@ -15,6 +15,8 @@ public class Template {
     
     private Long projectId;
     
+    private Long userId;
+    
     private String desc;
     
     private String suffix;
@@ -26,6 +28,14 @@ public class Template {
     private Date createTime;
     
     private Date updateTime;
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 
 	public Integer getDeleted() {
 		return deleted;

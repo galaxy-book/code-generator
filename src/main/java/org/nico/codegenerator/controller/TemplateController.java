@@ -67,6 +67,12 @@ public class TemplateController {
 	    return templateService.delete(id);
 	}
 	
+	@ApiOperation(value = "获取模板详情")
+	@GetMapping("/{id}")
+	public RespVo<GetTemplateRespVo> get(@PathVariable Long id){
+	    return templateService.get(id);
+	}
+	
 	@ApiOperation(value = "更新模板")
 	@PutMapping("/{id}")
 	public RespVo<?> put(@PathVariable Long id, @RequestBody UpdateTemplateReqVo templateReqVo){
@@ -83,5 +89,17 @@ public class TemplateController {
 	        return RespVo.failure(RespCode.PARAMS_ERROR, "desc");
 	    }
 	    return templateService.update(id, templateReqVo);
+	}
+	
+	@ApiOperation(value = "获取模板列表")
+	@GetMapping
+	public RespVo<ListVo<GetTemplateRespVo>> list(
+			@RequestParam(required = false) Long projectId,
+			@RequestParam int page, 
+            @RequestParam int size){
+		if(size > BaseConfig.pageMaxLength) {
+            return RespVo.failure(RespCode.PARAMS_OVERFLOW_LIMIT, "size", "0", BaseConfig.pageMaxLength);
+        }
+	    return templateService.listOfPage(projectId, page, size);
 	}
 }

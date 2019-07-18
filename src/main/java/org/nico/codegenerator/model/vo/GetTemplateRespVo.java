@@ -5,15 +5,15 @@ import java.util.Date;
 import org.nico.ourbatis.annotation.RenderName;
 import org.nico.ourbatis.annotation.RenderPrimary;
 
-@RenderName("template")
 public class GetTemplateRespVo {
 
-	@RenderPrimary
     private Long id;
     
     private String name;
     
     private Long projectId;
+    
+    private Long userId;
     
     private String desc;
     
@@ -26,6 +26,14 @@ public class GetTemplateRespVo {
     private Date createTime;
     
     private Date updateTime;
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 
 	public Integer getDeleted() {
 		return deleted;

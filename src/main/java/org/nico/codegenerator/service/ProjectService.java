@@ -54,6 +54,19 @@ public class ProjectService {
 		}
 	}
 	
+	public RespVo<GetProjectRespVo> get(Long id){
+		Project query = new Project();
+		query.setId(id);
+		query.setDeleted(DelFlag.NOTDEL.getCode());
+		query.setUserId(HttpContextUtils.getUserId());
+		
+		Project project = projectMapper.selectEntity(query);
+		if(project == null) {
+			return RespVo.failure(RespCode.PROJECT_NOT_EXIST);
+		}
+		return RespVo.success(ModelUtils.convert(project, GetProjectRespVo.class));
+	}
+	
 	public RespVo<?> update(Long id, UpdateProjectReqVo projectReqVo){
 		Project query = new Project();
 		query.setId(id);
@@ -77,6 +90,7 @@ public class ProjectService {
 			return RespVo.failure(RespCode.UNAUTHORIZED_OPERATION);
 		}
 		Page<Project> pages = PageHelper.startPage(page, size, "create_time desc");
+		pages.setPageSizeZero(size == 0);
 		Project query = new Project();
 		query.setUserId(HttpContextUtils.getUserId());
 		query.setDeleted(DelFlag.NOTDEL.getCode());

@@ -12,6 +12,7 @@ import org.nico.codegenerator.model.vo.RespVo;
 import org.nico.codegenerator.model.vo.UpdateProjectReqVo;
 import org.nico.codegenerator.service.ProjectService;
 import org.nico.codegenerator.service.TemplateService;
+import org.nico.codegenerator.utils.HttpContextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,6 +62,12 @@ public class ProjectController {
 	    return projectService.delete(id);
 	}
 	
+	@ApiOperation(value = "获取项目详情")
+	@GetMapping("/{id}")
+	public RespVo<GetProjectRespVo> get(@PathVariable Long id){
+	    return projectService.get(id);
+	}
+	
 	@ApiOperation(value = "更新项目")
 	@PutMapping("/{id}")
 	public RespVo<?> put(@PathVariable Long id, @RequestBody UpdateProjectReqVo projectReqVo){
@@ -84,7 +91,7 @@ public class ProjectController {
 	
 	@ApiOperation(value = "获取模板")
 	@GetMapping("/{projectId}/templates")
-	public RespVo<ListVo<GetTemplateRespVo>> get(
+	public RespVo<ListVo<GetTemplateRespVo>> getTemplates(
 			@PathVariable Long projectId,
 			@RequestParam int page, 
             @RequestParam int size){
@@ -92,5 +99,16 @@ public class ProjectController {
             return RespVo.failure(RespCode.PARAMS_OVERFLOW_LIMIT, "size", "0", BaseConfig.pageMaxLength);
         }
 	    return templateService.listOfPage(projectId, page, size);
+	}
+	
+	@ApiOperation(value = "获取项目")
+	@GetMapping
+	public RespVo<ListVo<GetProjectRespVo>> list(
+			@RequestParam int page, 
+            @RequestParam int size){
+		if(size > BaseConfig.pageMaxLength) {
+            return RespVo.failure(RespCode.PARAMS_OVERFLOW_LIMIT, "size", "0", BaseConfig.pageMaxLength);
+        }
+	    return projectService.listOfPage(HttpContextUtils.getUserId(), page, size);
 	}
 }
