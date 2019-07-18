@@ -23,6 +23,8 @@ public enum RespCode {
     PROJECT_NOT_EXIST(516, "项目不存在"),
     TEMPLATE_NOT_EXIST(517, "模板不存在"),
     TEMPLATE_PROJECT_NOT_EXIST(518, "模板所属项目不存在"),
+    PROJECT_TEMPLATE_NOT_CONFIG(519, "未配置项目模板"),
+    GENERATE_ERROR(520, "生成过程发生异常: %s"),
     
     PARAMS_OVERFLOW_LIMIT(901, "%s超出限制%s-%s"),
     PARAMS_ERROR(902, "%s参数错误"),

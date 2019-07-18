@@ -1,5 +1,5 @@
 <%
-var tableName = r.name;
+var tableName = data.name;
 var names = strutil.split(tableName, "_");
 var objName = "";
 for(n in names){
@@ -14,9 +14,9 @@ for(n in names){
 }
 
 var grahqlObject = printCapitalize(printHump(objName));
-var talbeObject = printCapitalize(printHump(r.name));
+var talbeObject = printCapitalize(printHump(data.name));
 %>
-package ${r.properties.package}
+package resolvers
 
 import (
 	"context"

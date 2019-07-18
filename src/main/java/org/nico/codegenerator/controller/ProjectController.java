@@ -1,15 +1,19 @@
 package org.nico.codegenerator.controller;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.nico.codegenerator.config.BaseConfig;
 import org.nico.codegenerator.consts.RespCode;
 import org.nico.codegenerator.model.vo.CreateProjectReqVo;
 import org.nico.codegenerator.model.vo.CreateProjectRespVo;
+import org.nico.codegenerator.model.vo.GenerateProjectReqVo;
 import org.nico.codegenerator.model.vo.GetProjectRespVo;
 import org.nico.codegenerator.model.vo.GetTemplateRespVo;
 import org.nico.codegenerator.model.vo.ListVo;
 import org.nico.codegenerator.model.vo.RespVo;
 import org.nico.codegenerator.model.vo.UpdateProjectReqVo;
+import org.nico.codegenerator.parser.AbstractParser;
 import org.nico.codegenerator.service.ProjectService;
 import org.nico.codegenerator.service.TemplateService;
 import org.nico.codegenerator.utils.HttpContextUtils;
@@ -110,5 +114,25 @@ public class ProjectController {
             return RespVo.failure(RespCode.PARAMS_OVERFLOW_LIMIT, "size", "0", BaseConfig.pageMaxLength);
         }
 	    return projectService.listOfPage(HttpContextUtils.getUserId(), page, size);
+	}
+	
+	@ApiOperation(value = "生成项目")
+	@PostMapping("/{projectId}/generate")
+	public RespVo<?> generate(
+			@PathVariable Long projectId,
+			@RequestBody GenerateProjectReqVo generateReqVo,
+			HttpServletResponse response){
+		String datasType = generateReqVo.getDatasType();
+		String datas = generateReqVo.getDatas();
+		
+		if(! AbstractParser.SUPPORT_PARSER.containsKey(datasType.toUpperCase())) {
+			return RespVo.failure(RespCode.PARAMS_ERROR, "datasType, support: " + AbstractParser.SUPPORT_PARSER.keySet());
+		}
+		
+		if(StringUtils.isBlank(datas)) {
+	        return RespVo.failure(RespCode.PARAMS_ERROR, "datas");
+	    }
+		
+	    return projectService.generate(projectId, generateReqVo, response);
 	}
 }

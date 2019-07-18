@@ -1,12 +1,18 @@
 package org.nico.codegenerator.utils;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class FileUtils {
 
@@ -111,6 +117,26 @@ public class FileUtils {
         
     }
     
+    public static void write(File file, byte[] datas) {
+    	BufferedOutputStream out = null;
+        try {
+        	out = new BufferedOutputStream(new FileOutputStream(file));
+        	out.write(datas);
+        	out.flush();
+        }catch(IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(out != null) {
+                try {
+                	out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        
+    }
+    
     public static boolean isRelative(String file) {
         if(file.startsWith("/")) return false;
         if(file.matches("[a-zA-Z]:\\\\(.*)")) return false;
@@ -152,5 +178,33 @@ public class FileUtils {
         }
         return reqStr.toString();
     }
+    
+	/**
+	 * 拼接文件名
+	 * 
+	 * @param name 名称
+	 * @param suffix 后缀
+	 * @return 文件全称
+	 */
+	public static String joint(String name, String suffix) {
+		if(StringUtils.isBlank(suffix)) {
+			return name;
+		}
+		return name + (suffix.startsWith(".") ? "" : ".") + suffix;
+	}
+	
+	/**
+	 * 获取随机名
+	 * 
+	 * @param suffix 后缀
+	 * @return 文件全称
+	 */
+	public static String randomFileName(String suffix) {
+		return joint("nico" + new Date().getTime(), suffix);
+	}
+	
+	public static String specificFileName(String name, String suffix) {
+		return joint(name, suffix);
+	}
     
 }
