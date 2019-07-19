@@ -1,4 +1,4 @@
-package org.nico.byteanimation.utils.tests;
+package org.nico.codegenerator.utils.tests;
 
 import org.junit.Assert;
 import org.junit.Test;
