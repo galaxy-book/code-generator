@@ -133,6 +133,7 @@ public class ProjectService {
 		}
 		Template templateQuery = new Template();
 		templateQuery.setProjectId(projectId);
+		templateQuery.setDeleted(DelFlag.NOTDEL.getCode());
 		List<Template> templates = templateMapper.selectList(templateQuery);
 		
 		if(CollectionUtils.isEmpty(templates)) {
