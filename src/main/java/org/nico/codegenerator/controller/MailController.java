@@ -23,7 +23,7 @@ public class MailController {
 	private MailService mailService;
 	
 	@ApiOperation(value = "发送业务邮件")
-	@PostMapping("/")
+	@PostMapping
 	public RespVo<?> send(
 			@RequestBody MailSendInVo mailSendInVo
 			){
