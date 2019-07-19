@@ -169,7 +169,6 @@ public class ProjectService {
 				zipDatas = ZipUtils.compress(zesBatch);
 				zipName = FileUtils.randomFileName("zip");
 			}
-			FileUtils.write(new File("D://temp//test.zip"), zipDatas);
 			
 			response.setContentType("application/octet-stream");
 			response.addHeader("Content-Disposition", "attachment;filename=" + zipName + ";");
