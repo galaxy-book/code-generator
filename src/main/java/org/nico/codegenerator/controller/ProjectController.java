@@ -1,5 +1,7 @@
 package org.nico.codegenerator.controller;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +16,7 @@ import org.nico.codegenerator.model.vo.ListVo;
 import org.nico.codegenerator.model.vo.RespVo;
 import org.nico.codegenerator.model.vo.UpdateProjectReqVo;
 import org.nico.codegenerator.parser.AbstractParser;
+import org.nico.codegenerator.render.TemplateRender;
 import org.nico.codegenerator.service.ProjectService;
 import org.nico.codegenerator.service.TemplateService;
 import org.nico.codegenerator.utils.HttpContextUtils;
@@ -44,7 +47,7 @@ public class ProjectController {
 	
 	@ApiOperation(value = "创建项目")
 	@PostMapping
-	public RespVo<CreateProjectRespVo> post(@RequestBody CreateProjectReqVo projectReqVo){
+	public RespVo<CreateProjectRespVo> post(@RequestBody CreateProjectReqVo projectReqVo) throws IOException{
 	    String name = projectReqVo.getName();
 	    String properties = projectReqVo.getProperties();
 	    String desc = projectReqVo.getDesc();		
@@ -54,8 +57,8 @@ public class ProjectController {
 	    if(StringUtils.isNotBlank(desc) && desc.length() > 1000) {
 	        return RespVo.failure(RespCode.PARAMS_ERROR, "desc");
 	    }
-	    if(StringUtils.isNotBlank(properties) && !JSON.isValid(properties)) {
-            return RespVo.failure(RespCode.PARAMS_ERROR_WITH_REASON, "properties", "Json格式非法");
+	    if(StringUtils.isNotBlank(properties) && !TemplateRender.getInstance().isValid(properties)) {
+            return RespVo.failure(RespCode.PARAMS_ERROR_WITH_REASON, "properties", "模板语法校验非法");
         }
 	    return projectService.create(projectReqVo);
 	}
@@ -74,7 +77,7 @@ public class ProjectController {
 	
 	@ApiOperation(value = "更新项目")
 	@PutMapping("/{id}")
-	public RespVo<?> put(@PathVariable Long id, @RequestBody UpdateProjectReqVo projectReqVo){
+	public RespVo<?> put(@PathVariable Long id, @RequestBody UpdateProjectReqVo projectReqVo) throws IOException{
 		String name = projectReqVo.getName();
 	    String properties = projectReqVo.getProperties();
 	    String desc = projectReqVo.getDesc();		
@@ -84,11 +87,8 @@ public class ProjectController {
 	    if(StringUtils.isNotBlank(desc) && desc.length() > 1000) {
 	        return RespVo.failure(RespCode.PARAMS_ERROR, "desc");
 	    }
-	    if(StringUtils.isNotBlank(properties) && !JSON.isValid(properties)) {
-            return RespVo.failure(RespCode.PARAMS_ERROR_WITH_REASON, "properties", "Json格式非法");
-        }
-	    if(StringUtils.isNotBlank(properties) && !JSON.isValid(properties)) {
-            return RespVo.failure(RespCode.PARAMS_ERROR_WITH_REASON, "properties", "Json格式非法");
+	    if(StringUtils.isNotBlank(properties) && !TemplateRender.getInstance().isValid(properties)) {
+            return RespVo.failure(RespCode.PARAMS_ERROR_WITH_REASON, "properties", "模板语法校验非法");
         }
 	    return projectService.update(id, projectReqVo);
 	}

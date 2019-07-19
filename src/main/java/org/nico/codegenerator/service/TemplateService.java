@@ -1,6 +1,5 @@
 package org.nico.codegenerator.service;
 
-import org.apache.http.protocol.HTTP;
 import org.nico.codegenerator.consts.DelFlag;
 import org.nico.codegenerator.consts.RespCode;
 import org.nico.codegenerator.mapper.ProjectMapper;

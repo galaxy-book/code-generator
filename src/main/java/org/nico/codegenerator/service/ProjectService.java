@@ -141,19 +141,18 @@ public class ProjectService {
 		
 		try {
 			List<Data> datas = AbstractParser.getParser(generateReqVo.getDatasType()).parse(generateReqVo.getDatas());
-			Map<String, Object> properties = null;
+			String templateProperties = "";
 			if(StringUtils.isNotBlank(project.getProperties())) {
-				properties = JSON.parseObject(project.getProperties(), Map.class);
+				templateProperties = project.getProperties();
 			}
 			List<ZipEntity> zesBatch = new ArrayList<ZipEntity>();
 			for(Data data: datas) {
 				List<ZipEntity> zes = new ArrayList<ZipEntity>();
-				if(properties != null) {
-					data.setProperties(properties);
-				}
 				for(Template template: templates) {
-					String source = TemplateRender.getInstance().rending(template.getContent(), data);
-					zes.add(new ZipEntity(source.getBytes(), FileUtils.joint(template.getName(), template.getSuffix())));
+					String source = TemplateRender.getInstance().rending(templateProperties + template.getContent(), data);
+					String name = TemplateRender.getInstance().rending(templateProperties + template.getName(), data);
+					
+					zes.add(new ZipEntity(source.getBytes(), FileUtils.joint(name, template.getSuffix())));
 				}
 				byte[] buf = ZipUtils.compress(zes);
 				zesBatch.add(new ZipEntity(buf, FileUtils.joint(data.getName(), "zip")));

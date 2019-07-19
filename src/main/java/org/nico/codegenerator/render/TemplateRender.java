@@ -7,6 +7,7 @@ import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
 import org.beetl.core.resource.StringTemplateResourceLoader;
 import org.nico.codegenerator.parser.entity.Data;
+import org.nico.codegenerator.render.function.ConvertType;
 import org.nico.codegenerator.render.function.PrintCapitalize;
 import org.nico.codegenerator.render.function.PrintHump;
 
@@ -37,11 +38,21 @@ public class TemplateRender {
 		gt = new GroupTemplate(resourceLoader, cfg);
 		gt.registerFunction("printHump", new PrintHump());
 		gt.registerFunction("printCapitalize", new PrintCapitalize());
+		gt.registerFunction("convertType", new ConvertType());
 	}
 	
 	public String rending(String template, Data data) {
 		Template t = gt.getTemplate(template);
 		t.binding("data", data);
 		return t.render();
+	}
+	
+	public boolean isValid(String template) {
+		Template t = gt.getTemplate(template);
+		return null == t.validate();
+	}
+
+	public GroupTemplate getGt() {
+		return gt;
 	}
 }
