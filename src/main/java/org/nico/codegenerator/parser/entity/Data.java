@@ -86,6 +86,12 @@ public class Data {
 		public void setType(Type type) {
 			this.type = type;
 		}
+
+		@Override
+		public String toString() {
+			return "Field [name=" + name + ", type=" + type + ", required=" + required + ", primarily=" + primarily
+					+ "]";
+		}
 		
 	}
 }

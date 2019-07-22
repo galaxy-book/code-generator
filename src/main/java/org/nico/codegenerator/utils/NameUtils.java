@@ -21,7 +21,7 @@ public class NameUtils {
 		for (int i = 0; i < len; i++) {
 			char c = value.charAt(i);
 
-			if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
+			if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_') {
 				if (Character.isUpperCase(c)){
 					if(i > 0) {
 						sb.append(UNDERLINE);
