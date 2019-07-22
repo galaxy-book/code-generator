@@ -3,6 +3,7 @@ package org.nico.codegenerator.service;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -147,11 +148,17 @@ public class ProjectService {
 				templateProperties = project.getProperties();
 			}
 			List<ZipEntity> zesBatch = new ArrayList<ZipEntity>();
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("datas", datas);
+			
 			for(Data data: datas) {
+				map.put("data", data);
+				
 				List<ZipEntity> zes = new ArrayList<ZipEntity>();
 				for(Template template: templates) {
-					String source = TemplateRender.getInstance().rending(templateProperties + template.getContent(), data);
-					String name = TemplateRender.getInstance().rending(templateProperties + template.getName(), data);
+					String source = TemplateRender.getInstance().rending(templateProperties + template.getContent(), map);
+					String name = TemplateRender.getInstance().rending(templateProperties + template.getName(), map);
 					
 					zes.add(new ZipEntity(source.getBytes(), FileUtils.joint(name, template.getSuffix())));
 				}

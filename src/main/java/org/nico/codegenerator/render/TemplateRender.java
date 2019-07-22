@@ -1,6 +1,8 @@
 package org.nico.codegenerator.render;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
@@ -41,9 +43,9 @@ public class TemplateRender {
 		gt.registerFunction("convertType", new ConvertType());
 	}
 	
-	public String rending(String template, Data data) {
+	public String rending(String template, Map<String, Object> datas) {
 		Template t = gt.getTemplate(template);
-		t.binding("data", data);
+		t.binding(datas);
 		return t.render();
 	}
 	
