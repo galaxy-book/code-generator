@@ -23,7 +23,7 @@ public class ConvertType implements Function{
 		case "JAVA":
 			return type.getJavaType();
 		case "GRAPHQL":
-			return type.getJavaType();
+			return type.getGraphqlType();
 		default:
 			return o;
 		}
