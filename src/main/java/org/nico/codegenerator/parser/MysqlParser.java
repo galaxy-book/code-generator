@@ -4,20 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.nico.codegenerator.parser.entity.Data;
-import org.nico.codegenerator.parser.entity.Type;
 import org.nico.codegenerator.parser.entity.Data.Field;
+import org.nico.codegenerator.parser.entity.Type;
 import org.nico.codegenerator.utils.NameUtils;
 import org.springframework.util.CollectionUtils;
 
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
-import net.sf.jsqlparser.statement.create.table.Index;
 
 public class MysqlParser extends AbstractParser{
 
@@ -65,7 +62,7 @@ public class MysqlParser extends AbstractParser{
 	
 	@Override
 	public List<Data> parse(String input) throws JSQLParserException {
-		String[] ddls = input.split(";");
+		String[] ddls = input.split(";" + System.lineSeparator());
 		
 		List<Data> datas = new ArrayList<>(ddls.length);
 		for(String ddl: ddls) {
@@ -105,4 +102,5 @@ public class MysqlParser extends AbstractParser{
 		
 		return datas;
 	}
+	
 }
