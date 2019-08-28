@@ -95,6 +95,7 @@ public class MysqlParser extends AbstractParser{
 				boolean required = specBuilder.toString().contains("NOT NULL");
 				boolean primarily = primaryKeyList.contains(name);
 				fields.add(new Field(name, MYSQL_TYPE_MAP.get(col.getColDataType().getDataType().toLowerCase()), required, primarily));
+				specBuilder.setLength(0);
 			});
 			data.setFields(fields);
 			datas.add(data);
