@@ -12,6 +12,8 @@ import org.nico.codegenerator.parser.entity.Type;
 import org.nico.codegenerator.utils.NameUtils;
 import org.springframework.util.CollectionUtils;
 
+import com.alibaba.fastjson.JSON;
+
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.create.table.CreateTable;
@@ -87,14 +89,32 @@ public class MysqlParser extends AbstractParser{
 			List<Field> fields = new ArrayList<>(c.getColumnDefinitions().size());
 			StringBuilder specBuilder = new StringBuilder();
 			c.getColumnDefinitions().forEach(col -> {
+				
+				String comment = "";
+				boolean isComment = false;
 				if(! CollectionUtils.isEmpty(col.getColumnSpecStrings())) {
-					col.getColumnSpecStrings().forEach(s -> specBuilder.append(s.toUpperCase() + " "));
+					for(String s: col.getColumnSpecStrings()) {
+						specBuilder.append(s.toUpperCase() + " ");
+						if(isComment) {
+							isComment = false;
+							comment = s.replace("'", "");
+						}
+						
+						if(s.toUpperCase().equals("COMMENT")) {
+							isComment = true;
+						}
+					}
 				}
 				String name = NameUtils.all2Slide(col.getColumnName());
 				
 				boolean required = specBuilder.toString().contains("NOT NULL");
 				boolean primarily = primaryKeyList.contains(name);
-				fields.add(new Field(name, MYSQL_TYPE_MAP.get(col.getColDataType().getDataType().toLowerCase()), required, primarily));
+				fields.add(new Field().setName(name)
+						.setType(MYSQL_TYPE_MAP.get(col.getColDataType().getDataType().toLowerCase()))
+						.setRequired(required)
+						.setPrimarily(primarily)
+						.setComment(comment));
+				
 				specBuilder.setLength(0);
 			});
 			data.setFields(fields);

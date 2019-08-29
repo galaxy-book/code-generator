@@ -44,47 +44,55 @@ public class Data {
 		private boolean required;
 		
 		private boolean primarily;
+		
+		private String comment;
 
 		public Field() {
 		}
 
-		public Field(String name, Type type, boolean required, boolean primarily) {
-			this.name = name;
-			this.type = type;
-			this.required = required;
-			this.primarily = primarily;
+		public String getComment() {
+			return comment;
+		}
+
+		public Field setComment(String comment) {
+			this.comment = comment;
+			return this;
 		}
 
 		public boolean isPrimarily() {
 			return primarily;
 		}
 
-		public void setPrimarily(boolean primarily) {
+		public Field setPrimarily(boolean primarily) {
 			this.primarily = primarily;
+			return this;
 		}
 
 		public boolean isRequired() {
 			return required;
 		}
 
-		public void setRequired(boolean required) {
+		public Field setRequired(boolean required) {
 			this.required = required;
+			return this;
 		}
 
 		public String getName() {
 			return name;
 		}
 
-		public void setName(String name) {
+		public Field setName(String name) {
 			this.name = name;
+			return this;
 		}
 
 		public Type getType() {
 			return type;
 		}
 
-		public void setType(Type type) {
+		public Field setType(Type type) {
 			this.type = type;
+			return this;
 		}
 
 		@Override
