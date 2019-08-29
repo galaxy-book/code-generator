@@ -79,6 +79,22 @@ public class MysqlParser extends AbstractParser{
 			Data data = new Data();
 			data.setName(NameUtils.all2Slide(c.getTable().getName()));
 			
+			String tableComment = "";
+			if(! CollectionUtils.isEmpty(c.getTableOptionsStrings())) {
+				for(int index = 0; index < c.getTableOptionsStrings().size(); index ++) {
+					Object opt = c.getTableOptionsStrings().get(index);
+					if(opt instanceof String && ((String) opt).equalsIgnoreCase("COMMENT")) {
+						if(index + 2 < c.getTableOptionsStrings().size()) {
+							Object com = c.getTableOptionsStrings().get(index + 2);
+							if(com != null && com instanceof String) {
+								tableComment = ((String) com).replace("'", "");
+							}
+						}
+					}
+				}
+			}
+			data.setComment(tableComment);
+			
 			List<String> primaryKeyList = new ArrayList<>();
 			c.getIndexes().stream().filter(e -> e.getType().equalsIgnoreCase("PRIMARY KEY")).forEach(e -> {
 				e.getColumnsNames().forEach(key -> {
